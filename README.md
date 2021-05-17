@@ -1,2 +1,2 @@
-# Neural text generation from structured data
+# Neural Text Generation from Structured Data
 
