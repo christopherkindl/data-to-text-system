@@ -1,0 +1,183 @@
+[
+    {
+        "topic": "parken stadium",
+        "wiki": "https://en.wikipedia.org/wiki/Parken_Stadium",
+        "url": "https://raw.githubusercontent.com/wenhuchen/Table-Fact-Checking/master/data/all_csv/2-1664918-1.html.csv",
+        "action": "ordinal",
+        "sent": "the third highest attendance at parken stadium was during a 2006 danish superliga match .",
+        "annotation": {
+            "row": "6",
+            "col": "6",
+            "order": "3",
+            "col_other": "5",
+            "max_or_min": "max_to_min",
+            "value_mentioned": "no",
+            "scope": "all",
+            "subset": null
+        },
+        "logic": {
+            "func": "str_eq",
+            "args": [
+                {
+                    "func": "str_hop",
+                    "args": [
+                        {
+                            "func": "nth_argmax",
+                            "args": [
+                                "all_rows",
+                                "attendance",
+                                "3"
+                            ],
+                            "result": null,
+                            "ind": 0,
+                            "tostr": "nth_argmax { all_rows ; attendance ; 3 }"
+                        },
+                        "competition"
+                    ],
+                    "result": "danish superliga 2005 - 06",
+                    "ind": 1,
+                    "tostr": "hop { nth_argmax { all_rows ; attendance ; 3 } ; competition }"
+                },
+                "danish superliga 2005 - 06"
+            ],
+            "result": true,
+            "ind": 2,
+            "tostr": "eq { hop { nth_argmax { all_rows ; attendance ; 3 } ; competition } ; danish superliga 2005 - 06 } = true",
+            "tointer": "select the row whose attendance record of all rows is 3rd maximum . the competition record of this row is danish superliga 2005 - 06 ."
+        },
+        "logic_str": "eq { hop { nth_argmax { all_rows ; attendance ; 3 } ; competition } ; danish superliga 2005 - 06 } = true",
+        "interpret": "select the row whose attendance record of all rows is 3rd maximum . the competition record of this row is danish superliga 2005 - 06 .",
+        "num_func": 3,
+        "nid": 3,
+        "g_ids": {
+            "str_eq_2": 2,
+            "result_3": 3,
+            "str_hop_1": 1,
+            "nth_argmax_0": 0,
+            "all_rows_4": 4,
+            "attendance_5": 5,
+            "3_6": 6,
+            "competition_7": 7,
+            "danish superliga 2005 - 06_8": 8
+        },
+        "g_ids_features": {
+            "str_eq_2": "str_eq",
+            "result_3": "true",
+            "str_hop_1": "str_hop",
+            "nth_argmax_0": "nth_argmax",
+            "all_rows_4": "all_rows",
+            "attendance_5": "attendance",
+            "3_6": "3",
+            "competition_7": "competition",
+            "danish superliga 2005 - 06_8": "danish superliga 2005 - 06"
+        },
+        "g_adj": {
+            "str_eq_2": [
+                3
+            ],
+            "result_3": [],
+            "str_hop_1": [
+                2
+            ],
+            "nth_argmax_0": [
+                1
+            ],
+            "all_rows_4": [
+                0
+            ],
+            "attendance_5": [
+                0
+            ],
+            "3_6": [
+                0
+            ],
+            "competition_7": [
+                1
+            ],
+            "danish superliga 2005 - 06_8": [
+                2
+            ]
+        },
+        "table_header": [
+            "date",
+            "team 1",
+            "res",
+            "team 2",
+            "competition",
+            "attendance"
+        ],
+        "table_cont": [
+            [
+                "9 september 1992",
+                "denmark",
+                "1 - 2",
+                "germany",
+                "friendly match",
+                "40500"
+            ],
+            [
+                "4 may 1994",
+                "arsenal",
+                "1 - 0",
+                "parma",
+                "1994 european cup winners ' cup final",
+                "33765"
+            ],
+            [
+                "17 may 2000",
+                "galatasaray",
+                "0 - 0 ( p 4 - 1 )",
+                "arsenal",
+                "2000 uefa cup final",
+                "38919"
+            ],
+            [
+                "8 october 2005",
+                "denmark",
+                "1 - 0",
+                "greece",
+                "2006 fifa world cup qualifying group 2",
+                "42099"
+            ],
+            [
+                "6 april 2006",
+                "fc copenhagen",
+                "1 - 0",
+                "lillestr\u00f8m",
+                "2006 royal league final",
+                "13617"
+            ],
+            [
+                "30 april 2006",
+                "fc copenhagen",
+                "0 - 0",
+                "br\u00f8ndby",
+                "danish superliga 2005 - 06",
+                "41201"
+            ],
+            [
+                "2 june 2007",
+                "denmark",
+                "0 - 3",
+                "sweden",
+                "uefa euro 2008 qualifying group f",
+                "42083"
+            ],
+            [
+                "21 may 2011",
+                "ag k\u00f8benhavn",
+                "30 - 21",
+                "bjerringbro - silkeborg",
+                "2011 danish handball league final",
+                "36651"
+            ],
+            [
+                "20 april 2012",
+                "ag k\u00f8benhavn",
+                "29 - 23",
+                "fc barcelona",
+                "2011 - 12 ehf champions league quarterfinal",
+                "21293"
+            ]
+        ]
+    }]
