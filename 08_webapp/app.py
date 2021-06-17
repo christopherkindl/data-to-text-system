@@ -3,9 +3,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import companies
+import time
 
 st.write('''
-# Turn data into text''')
+# Summarising time series data of stock exchange data
+This app is based on a model that identifies segments by a linear approximatation algorithm and summarises them by natural language''')
 
 
 options = st.multiselect(
@@ -20,6 +22,10 @@ st.write('You selected:', options[0])
 st.write("")
 st.write("")
 
+# ----------------------------------
+# Yahoo Finance API & Data Preprocessing
+# ----------------------------------
+
 stock = options[0]
 
 data = yf.Ticker(stock)
@@ -28,16 +34,36 @@ tickerDF = data.history(period = '1d', start = '2019-01-01', end = '2021-01-01')
 
 chart = st.line_chart(tickerDF.Close)
 
-for i in range(len(tickerDF.Open)):
-    new_rows = tickerDF.Open[i]
-    chart.add_rows(new_rows)
-    #progress_bar.progress(i)
-    #last_rows = new_rows
-    time.sleep(0.05)
+# data = []
+# index = []
+# for i in range(len(tickerDF.Open)):
+#     index.append(tickerDF.Open.index[i])
+#     data.append(tickerDF.Open[i])
+#     df = pd.DataFrame(data=data, index = index)
+#     chart.add_rows(df)
+#     time.sleep(0.0025)
 
-my_chart.add_rows(tickerDF.Open)
+# ----------------------------------
+# Loading banner
+# ----------------------------------
+
+# with st.spinner('Wait for it...'):
+#      time.sleep(5)
+# st.success('Done!')
+
+# ----------------------------------
+# Algorithms
+# ----------------------------------
+
+# Linear approximation
+# Discrete Fourier Transform
+# Multiple Coefficient Binning
+# Symbolic Aggregate approximation
+
+
+# my_chart.add_rows(tickerDF.Open)
 #st.line_chart(tickerDF.Volume)
-with st.beta_expander("See explanation"):
+with st.beta_expander("Algorithm 1: Piece-wise Aggregate Approximation"):
      st.write("""
          Explaning how the piecewise linear representation is done.
      """)
