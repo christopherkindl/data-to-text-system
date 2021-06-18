@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import companies
 import time
+from datetime import date
 
 st.write('''
 # Summarising time series data of stock exchange data
@@ -94,6 +95,18 @@ with st.beta_expander("Algorithm 4: Symbolic Aggregate approximation"):
      st.write("""
          Explaning how the piecewise linear representation is done.
      """)
+
+# ----------------------------------
+# User input: time period
+# ----------------------------------
+
+# Connect user input function with max_error_value func
+
+min_value = date.fromisoformat('2019-12-01')
+max_value = date.fromisoformat('2019-12-15')
+
+date = st.date_input("Select time window to narrow down time series analysis",
+    min_value=min_value, max_value=max_value)
 
 
 st.write("")
