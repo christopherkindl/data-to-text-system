@@ -63,7 +63,34 @@ chart = st.line_chart(tickerDF.Close)
 
 # my_chart.add_rows(tickerDF.Open)
 #st.line_chart(tickerDF.Volume)
+st.write("")
+
+st.write('''
+### Summary
+Place for output sentences that describe the model's findings.''')
+
+st.write("")
+
+st.write('''
+### Under the hood
+Algorithms used to identify trends and segments''')
+
 with st.beta_expander("Algorithm 1: Piece-wise Aggregate Approximation"):
+     st.write("""
+         Explaning how the piecewise linear representation is done.
+     """)
+
+with st.beta_expander("Algorithm 2: Discrete Fourier Transform"):
+     st.write("""
+         Explaning how the piecewise linear representation is done.
+     """)
+
+with st.beta_expander("Algorithm 3: Multiple Coefficient Binning"):
+     st.write("""
+         Explaning how the piecewise linear representation is done.
+     """)
+
+with st.beta_expander("Algorithm 4: Symbolic Aggregate approximation"):
      st.write("""
          Explaning how the piecewise linear representation is done.
      """)
