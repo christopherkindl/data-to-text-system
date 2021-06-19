@@ -1,5 +1,5 @@
 sp500 = [
-"",
+"Search for company share code",
 "MMM",
 "ABT",
 "ABBV",
