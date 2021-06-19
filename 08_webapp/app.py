@@ -37,7 +37,7 @@ if stock != "Search for company share code":
     start_date = datetime.strptime(string_date, '%Y-%m-%d').date()
 
     st.write('''
-    Select a time period to narrow down the time analysis''')
+    Select a time period to narrow down the analysis''')
 
     # user field for date selection
     start_date = st.date_input(label='Start date', value=start_date, min_value=min_date)
