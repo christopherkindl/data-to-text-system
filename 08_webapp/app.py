@@ -11,15 +11,21 @@ st.write('''
 This app is based on a model that identifies segments by a linear approximatation algorithm and summarises them by natural language''')
 
 
-options = st.multiselect(
-     'Please select a stock',
+option = st.selectbox(
+     'How would you like to be contacted?',
      companies.sp500, help='test')
-     # ['Default stock'])
 
-if not options:
+# st.write('You selected:', option)
+
+# options = st.multiselect(
+#      'Please select a stock',
+#      companies.sp500, help='test')
+#      # ['Default stock'])
+
+if not option:
    st.stop()
 
-st.write('You selected:', options[0])
+st.write('You selected:', option)
 st.write("")
 st.write("")
 
@@ -27,7 +33,7 @@ st.write("")
 # Yahoo Finance API & Data Preprocessing
 # ----------------------------------
 
-stock = options[0]
+stock = option
 
 data = yf.Ticker(stock)
 
@@ -55,6 +61,12 @@ chart = st.line_chart(tickerDF.Close)
 # ----------------------------------
 # Algorithms
 # ----------------------------------
+
+# ----------------------------------
+# Testbed
+# ----------------------------------
+
+
 
 # Linear approximation
 # Discrete Fourier Transform
@@ -102,6 +114,18 @@ with st.beta_expander("Algorithm 4: Symbolic Aggregate approximation"):
 
 # Connect user input function with max_error_value func
 
+with st.form("my_form"):
+    st.write("Inside the form")
+    slider_val = st.slider("Form slider")
+    checkbox_val = st.checkbox("Form checkbox")
+
+    # Every form must have a submit button.
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("slider", slider_val, "checkbox", checkbox_val)
+
+st.write("Outside the form")
+
 min_value = date.fromisoformat('2019-12-01')
 max_value = date.fromisoformat('2019-12-15')
 
@@ -111,7 +135,6 @@ date = st.date_input("Select time window to narrow down time series analysis",
 
 st.write("")
 st.write("")
-
 
 
 # st.write('You selected:', options)
