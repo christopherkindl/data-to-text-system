@@ -9,9 +9,10 @@ from datetime import datetime
 import segment
 import wrappers
 from test_list import list_segments # import test segments
+import fit
 #from matplotlib.pylab import gca, figure, plot, subplot, title, xlabel, ylabel, xlim,show
 #from matplotlib.lines import Line2D
-import fit
+
 
 max_error = 50
 
@@ -63,8 +64,8 @@ if stock != "Search for company share code":
 
     # identify max and min date of selected stock
     eval_date = data.history(period = 'max', interval = '1d')
-    min_date = min(eval_date.index.date)
-    max_date = max(eval_date.index.date)
+    start_date = min(eval_date.index.date)
+    end_date = max(eval_date.index.date)
 
     # TEST TEST ----
 
@@ -81,8 +82,8 @@ if stock != "Search for company share code":
     # cur_year = date.today().year
     # string_date = str(cur_year) + '-01-01'
 
-    end_date = datetime.strptime('2021-06-18', '%Y-%m-%d').date()
-    start_date = datetime.strptime('2021-01-05', '%Y-%m-%d').date()
+    # end_date = datetime.strptime(min_date, '%Y-%m-%d').date()
+    # start_date = datetime.strptime(max_date, '%Y-%m-%d').date()
 
     # transform string date to datetime format
     # start_date = datetime.strptime(string_date, '%Y-%m-%d').date()
