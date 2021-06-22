@@ -170,15 +170,8 @@ if stock != "Search for company share code":
     max_error = max_error_value(series)
     st.write('Max error rate based on selected time window: ', max_error)
 
-    # # TEST -----
-    # a = list(tickerDF.index)[-1]
-    # a
-
     st.write("")
 
-    # algos = ['dog', 'cat', 'fish']
-    # pet = st.radio('Pick an algorithm', algos)
-        # algorithm selection
     with st.form(key='algorithm_selection'):
     	input = st.radio('Select an approximation algorithm', ['Bottom-Up', 'Top-Down', 'Sliding Window'])
     	submit_button = st.form_submit_button(label='Apply')
