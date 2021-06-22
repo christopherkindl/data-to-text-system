@@ -142,9 +142,18 @@ if stock != "Search for company share code":
     st.write('''
     Select a time period to narrow down the analysis''')
 
+    # create two columns to display date pickers side-by-side
+    col1, col2 = st.beta_columns(2)
+    with col1:
+        start_date = st.date_input(label='Start date', value=start_date, min_value=min_date)
+    with col2:
+        end_date = st.date_input(label='End date', value=end_date, max_value=max_date)
+
+
+
     # user field for date selection
-    start_date = st.date_input(label='Start date', value=start_date, min_value=min_date)
-    end_date = st.date_input(label='End date', value=end_date, max_value=max_date)
+    # start_date = st.date_input(label='Start date', value=start_date, min_value=min_date)
+    # end_date = st.date_input(label='End date', value=end_date, max_value=max_date)
 
     # VALIDATION
     # weekday1 = start_date.weekday()
