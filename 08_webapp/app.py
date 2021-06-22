@@ -18,7 +18,7 @@ import math
 # Functions
 # ----------------------------------
 
-def segment_detection(df, max_error):
+def segment_detection(df, max_error, algorithm):
 
     # identify index integer based on selected start and end date
     start_date = list(df.index)[0]
@@ -40,7 +40,15 @@ def segment_detection(df, max_error):
     series = list(round(df['Stock Price'], 2))
 
     # detect segments and filter series based on selected time range
-    segments = segment.bottomupsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
+
+    if algorithm == 'bottomupsegment':
+        segments = segment.bottomupsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
+
+    if algorithm == 'topdownsegment':
+        segments = segment.topdownsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
+
+    if algorithm == 'slidingwindowsegment':
+        segments = segment.slidingwindowsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
 
     return segments
 
@@ -65,6 +73,15 @@ def max_error_value(series):
 
 def company_information(data):
     return data.info['longBusinessSummary']
+
+# mapping dict for algorithm selection
+def selection_mapping(input):
+
+     mapping = {'Bottom-Up':'bottomupsegment',
+                'Top-Down':'topdownsegment',
+                'Sliding Window': 'slidingwindowsegment'}
+
+     return mapping[input]
 
 # ----------------------------------
 # App Logic
@@ -93,8 +110,8 @@ if stock != "Search for company share code":
     data = yf.Ticker(stock)
 
     # display company information
-    with st.beta_expander("About this company"):
-         st.write(company_information(data))
+    # with st.beta_expander("About this company"):
+    #      st.write(company_information(data))
 
     # identify max and min date of selected stock
     eval_date = data.history(period = 'max', interval = '1d')
@@ -161,13 +178,22 @@ if stock != "Search for company share code":
 
     # algos = ['dog', 'cat', 'fish']
     # pet = st.radio('Pick an algorithm', algos)
+        # algorithm selection
+    with st.form(key='algorithm_selection'):
+    	input = st.radio('Select an approximation algorithm', ['Bottom-Up', 'Top-Down', 'Sliding Window'])
+    	submit_button = st.form_submit_button(label='Apply')
+
+    # run model only if selection has been made
+    if not submit_button:
+        st.stop()
+
+    st.write('You selected a ' + input + ' Approximatation')
 
     # rename column name for better readability in the user interface
     tickerDF.rename(columns={'Close': 'Stock Price'}, inplace = True)
 
     # display chart
     chart = st.line_chart(round(tickerDF['Stock Price'], 2))
-
 
     # time series decomposition
 
@@ -177,12 +203,14 @@ if stock != "Search for company share code":
     # start_date = list(df.index)[0].date()
     # end_date = list(df.index)[-1].date()
 
+    # use selected algorithm by user
+    algorithm = selection_mapping(input)
+
     # assign segments
-    segments = segment_detection(tickerDF, max_error)
+    segments = segment_detection(tickerDF, max_error, algorithm)
 
     cur_index = []
     cur_data = []
-
 
     # identified segments
     # st.write('Segments identified: ', segments_identified)
@@ -195,11 +223,13 @@ if stock != "Search for company share code":
                 cur_data.append(segments[i][1])
                 cur_index.append(list(tickerDF.index)[segments[i][2]])
                 cur_data.append(segments[i][3])
-            df_test = pd.DataFrame(data=cur_data, index = cur_index, columns = ['Approximation'])
+            df_test = pd.DataFrame(data=cur_data, index = cur_index, columns = [input + ' Approximation'])
             chart.add_rows(df_test)
             # identified segments
             # st.write('Segments identified: ', len(cur_data))
-            time.sleep(0.5)
+            time.sleep(0.1)
+
+    st.write('Number of identified segments: ', len(segments))
 
 
 
