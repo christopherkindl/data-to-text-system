@@ -37,7 +37,7 @@ def segment_detection(df, max_error):
     #end = df.index.get_loc(end_date)
 
     # create list out of df column
-    series = list(round(df.Close, 2))
+    series = list(round(df['Stock Price'], 2))
 
     # detect segments and filter series based on selected time range
     segments = segment.bottomupsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
@@ -59,9 +59,16 @@ def max_error_value(series):
     max_value = math.floor(max(series))
     range_value = max_value - min_value
 
-    error_rate = 0.3 * max_value
+    error_rate = 0.75 * range_value
 
-    return error_rate
+    return round(error_rate, 1)
+
+def company_information(data):
+    return data.info['longBusinessSummary']
+
+# ----------------------------------
+# App Logic
+# ----------------------------------
 
 # def draw_segments(segments):
 #     ax = gca()
@@ -84,6 +91,10 @@ if stock != "Search for company share code":
 
     # get stock data of selected company
     data = yf.Ticker(stock)
+
+    # display company information
+    with st.beta_expander("About this company"):
+         st.write(company_information(data))
 
     # identify max and min date of selected stock
     eval_date = data.history(period = 'max', interval = '1d')
@@ -136,6 +147,9 @@ if stock != "Search for company share code":
 
     # identify max error
     series = list(round(tickerDF.Close, 2))
+    length_of_series = len(series)
+
+
     max_error = max_error_value(series)
     st.write('Max error rate based on selected time window: ', max_error)
 
@@ -148,8 +162,11 @@ if stock != "Search for company share code":
     # algos = ['dog', 'cat', 'fish']
     # pet = st.radio('Pick an algorithm', algos)
 
+    # rename column name for better readability in the user interface
+    tickerDF.rename(columns={'Close': 'Stock Price'}, inplace = True)
+
     # display chart
-    chart = st.line_chart(tickerDF.Close)
+    chart = st.line_chart(round(tickerDF['Stock Price'], 2))
 
 
     # time series decomposition
@@ -166,11 +183,22 @@ if stock != "Search for company share code":
     cur_index = []
     cur_data = []
 
+
+    # identified segments
+    # st.write('Segments identified: ', segments_identified)
+
     for i in range(len(segments)):
             cur_index.append(list(tickerDF.index)[segments[i][0]])
             cur_data.append(segments[i][1])
-            df_test = pd.DataFrame(data=cur_data, index = cur_index)
+            if i == len(segments)-1:
+                cur_index.append(list(tickerDF.index)[segments[i][0]])
+                cur_data.append(segments[i][1])
+                cur_index.append(list(tickerDF.index)[segments[i][2]])
+                cur_data.append(segments[i][3])
+            df_test = pd.DataFrame(data=cur_data, index = cur_index, columns = ['Approximation'])
             chart.add_rows(df_test)
+            # identified segments
+            # st.write('Segments identified: ', len(cur_data))
             time.sleep(0.5)
 
 
