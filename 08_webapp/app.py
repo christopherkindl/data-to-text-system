@@ -181,6 +181,7 @@ if stock != "Search for company share code":
 
     st.write("")
 
+    col1, col2 = st.beta_columns([.5,1])
     with st.form(key='algorithm_selection'):
     	input = st.radio('Select an approximation algorithm', ['Bottom-Up', 'Top-Down', 'Sliding Window'])
     	submit_button = st.form_submit_button(label='Apply')
@@ -249,8 +250,12 @@ if stock != "Search for company share code":
 st.write("")
 
 st.write('''
-### Summary
-Place for output sentences that describe the model's findings.''')
+### Summary''')
+
+with st.beta_expander("Expand to read"):
+     st.write("""
+         Explaning how the piecewise linear representation is done.
+     """)
 
 st.write("")
 
