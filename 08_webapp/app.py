@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import companies
 import time
-from datetime import date
+#from datetime import date as dt
 from datetime import datetime, timedelta
 import segment
 import wrappers
@@ -17,6 +17,95 @@ import math
 # ----------------------------------
 # Functions
 # ----------------------------------
+
+def dynamics(series):
+    '''
+    1. Input segment series.
+    2. Return angle of slope.
+    '''
+    slope_series = []
+    for segment in series:
+        x0, y0, x1, y1 = segment
+        angle = round((np.rad2deg(np.arctan2(y1 - y0, x1 - x0))), 2)
+        slope_series.append(angle)
+
+    return slope_series
+
+def suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
+
+def custom_strftime(t):
+
+    format = '%B {S} %Y'
+    string_date = t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
+
+    # check format type
+    #return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
+    #string_date = custom_strftime('%B {S} %Y', datetime.now())
+
+    return string_date
+
+def max_price(df):
+
+    max_value = 0
+    index = None
+
+
+    for i, value in enumerate(df['Close Price']):
+        if value > max_value:
+            max_value = round(value, 2)
+            index = df['Close Price'].index[i].date()
+            string_date = custom_strftime(index)
+
+    return max_value, string_date
+
+def min_price(df):
+
+    min_value = 999999
+    index = 0
+
+    for i, value in enumerate(df['Close Price']):
+        if value < min_value:
+            min_value = round(value, 2)
+            index = df['Close Price'].index[i].date()
+            string_date = custom_strftime(index)
+
+    return min_value, string_date
+
+def min_date(df):
+
+    min_date = custom_strftime(df.index.min())
+
+    return min_date
+
+def max_date(df):
+
+    max_date = custom_strftime(df.index.max())
+
+    return max_date
+
+def summary_price(df):
+
+    opening = 'During the time period of '
+    #mindate = min_date(df)
+    #maxdate = max_date(df)
+    glue = ' and '
+    date_element = ' the stock price peaked at '
+    max_value = max_price(df)[0]
+    glue_2 = ' on '
+    date_1 = max_price(df)[1]
+    glue_3 = ' and hit its lowest value of '
+    min_value = min_price(df)[0]
+    glue_4 = ' on '
+    date_2 = min_price(df)[1]
+    eos = '.'
+
+    # sentence0 = opening + mindate + glue + maxdate + date_element + str(max_value) + glue_2 + date_1 + glue_3 \
+    #             + str(min_value) + glue_4 + date_2 + eos
+    sentence0 = opening + str(df.index.min().date()) + glue + str(df.index.max().date()) + date_element + str(max_value) + glue_2 + date_1 + glue_3 \
+                + str(min_value) + glue_4 + date_2 + eos
+
+    return sentence0
 
 def segment_detection(df, max_error, algorithm):
 
@@ -37,7 +126,7 @@ def segment_detection(df, max_error, algorithm):
     #end = df.index.get_loc(end_date)
 
     # create list out of df column
-    series = list(round(df['Stock Price'], 2))
+    series = list(round(df['Close Price'], 2))
 
     # detect segments and filter series based on selected time range
 
@@ -51,6 +140,7 @@ def segment_detection(df, max_error, algorithm):
         segments = segment.slidingwindowsegment(series[start:end], fit.interpolate, fit.sumsquared_error, max_error)
 
     return segments
+
 
 def index_to_date(df, segments):
     dates = []
@@ -104,6 +194,8 @@ stock = st.selectbox(
 
 st.write("")
 
+tickerDF = ''
+
 if stock != "Search for company share code":
 
     # get stock data of selected company
@@ -129,8 +221,8 @@ if stock != "Search for company share code":
     # initialise date range with year-to-date
 
 
-    end_date = date.today() - timedelta(days=1)
-    cur_year = date.today().year
+    end_date = datetime.today() - timedelta(days=1)
+    cur_year = datetime.today().year
     string_date = str(cur_year) + '-01-04'
 
     # end_date = datetime.strptime(min_date, '%Y-%m-%d').date()
@@ -193,10 +285,11 @@ if stock != "Search for company share code":
     st.write('You selected a ' + input + ' Approximatation')
 
     # rename column name for better readability in the user interface
-    tickerDF.rename(columns={'Close': 'Stock Price'}, inplace = True)
+    tickerDF.rename(columns={'Close': 'Close Price'}, inplace = True)
+    df = tickerDF
 
     # display chart
-    chart = st.line_chart(round(tickerDF['Stock Price'], 2))
+    chart = st.line_chart(round(tickerDF['Close Price'], 2))
 
     # time series decomposition
 
@@ -246,42 +339,44 @@ if stock != "Search for company share code":
     #     chart.add_rows(df)
     #     time.sleep(0.0025)
 
+    # if tickerDF == '':
+    #     st.stop()
 
-st.write("")
+    st.write("")
 
-st.write('''
-### Summary''')
+    with st.beta_expander("Summary"):
+         st.write(summary_price(df))
 
-with st.beta_expander("Expand to read"):
-     st.write("""
-         Explaning how the piecewise linear representation is done.
-     """)
 
-st.write("")
 
-st.write('''
-### Under the hood
-Algorithms used to identify trends and segments''')
+#with st.beta_expander("Expand to read"):
 
-with st.beta_expander("Algorithm 1: Piece-wise Aggregate Approximation"):
-     st.write("""
-         Explaning how the piecewise linear representation is done.
-     """)
 
-with st.beta_expander("Algorithm 2: Discrete Fourier Transform"):
-     st.write("""
-         Explaning how the piecewise linear representation is done.
-     """)
-
-with st.beta_expander("Algorithm 3: Multiple Coefficient Binning"):
-     st.write("""
-         Explaning how the piecewise linear representation is done.
-     """)
-
-with st.beta_expander("Algorithm 4: Symbolic Aggregate approximation"):
-     st.write("""
-         Explaning how the piecewise linear representation is done.
-     """)
+# st.write("")
+#
+# st.write('''
+# ### Under the hood
+# Algorithms used to identify trends and segments''')
+#
+# with st.beta_expander("Algorithm 1: Piece-wise Aggregate Approximation"):
+#      st.write("""
+#          Explaning how the piecewise linear representation is done.
+#      """)
+#
+# with st.beta_expander("Algorithm 2: Discrete Fourier Transform"):
+#      st.write("""
+#          Explaning how the piecewise linear representation is done.
+#      """)
+#
+# with st.beta_expander("Algorithm 3: Multiple Coefficient Binning"):
+#      st.write("""
+#          Explaning how the piecewise linear representation is done.
+#      """)
+#
+# with st.beta_expander("Algorithm 4: Symbolic Aggregate approximation"):
+#      st.write("""
+#          Explaning how the piecewise linear representation is done.
+#      """)
 
 # ----------------------------------
 # User input: time period
