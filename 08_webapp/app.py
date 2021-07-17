@@ -11,6 +11,7 @@ import wrappers
 from test_list import list_segments # import test segments
 import fit
 import math
+from math import floor
 #from matplotlib.pylab import gca, figure, plot, subplot, title, xlabel, ylabel, xlim,show
 #from matplotlib.lines import Line2D
 
@@ -253,10 +254,23 @@ if stock != "Search for company share code":
     # weekday2 = end_date.weekday()
     # weekday2
 
+
+
     # check whether selected dates are weekend days
     if start_date.weekday() >= 5 or end_date.weekday() >= 5:
         st.warning('Please select weekdays')
         st.stop()
+    if start_date > end_date:
+        st.warning('Please choose a start date smaller than the end date')
+        st.stop()
+
+    delta = end_date - start_date
+
+
+    if delta.days >= 7 and delta.days < 90:
+        sections = floor(delta.days / 7)
+        st.write("Time span:", delta.days)
+        st.write("Number of sections:", sections)
 
     # get stock data filtered by selected date range
     tickerDF = data.history(interval = '1d', start = start_date, end = end_date)
