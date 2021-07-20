@@ -108,6 +108,53 @@ def summary_price(df):
 
     return sentence0
 
+def length_of_df(df):
+
+    length = len(df)
+
+    if length >= 7 and length < 60:
+        segment_range = 7
+    if length >= 60 and length < 180:
+        segment_range = 30
+    if length >= 180 and length < 365:
+        segment_range = 90
+    if length >= 365:
+        segment_range = 365
+
+    return segment_range
+
+def segment_divider(tuple_series, segment_range):
+    day_counter = segment_range
+
+    sublist = [[]]
+
+    for date, i in tuple_series:
+        sublist[-1].append((date, i))
+        day_counter -= 1
+        if day_counter == 0:
+            sublist.append([])
+            day_counter = segment_range
+
+    return sublist
+
+def segment_divider(series, segment_range):
+    day_counter = segment_range
+
+    sublist = [[]]
+
+    for i in series:
+        sublist[-1].append(i)
+        day_counter -= 1
+        if day_counter == 0:
+            sublist.append([])
+            day_counter = segment_range
+
+    return sublist
+
+def columns_to_tuples(column1, column2):
+    list_of_tuples = list(zip(column1, round(column2, 2)))
+    return list_of_tuples
+
 def segment_detection(df, max_error, algorithm):
 
     # identify index integer based on selected start and end date
@@ -115,6 +162,10 @@ def segment_detection(df, max_error, algorithm):
     start = df.index.get_loc(start_date)
     end_date = list(df.index)[-1]
     end = df.index.get_loc(end_date)
+
+    segment_range = length_of_df(df)
+    tuple_series = columns_to_tuples(df.index.date, df.Close)
+    sublist = segment_divider(tuple_series, segment_range)
 
     # transform input date from datetime to string date
     #start_date = start_date.strftime('%Y-%m-%d')
@@ -267,7 +318,7 @@ if stock != "Search for company share code":
     delta = end_date - start_date
 
 
-    if delta.days >= 7 and delta.days < 90:
+    if delta.days >= 7 and delta.days < 60:
         sections = floor(delta.days / 7)
         st.write("Time span:", delta.days)
         st.write("Number of sections:", sections)
@@ -283,7 +334,7 @@ if stock != "Search for company share code":
 
 
     max_error = max_error_value(series)
-    st.write('Max error rate based on selected time window: ', max_error)
+    #st.write('Max error rate based on selected time window: ', max_error)
 
     st.write("")
 
