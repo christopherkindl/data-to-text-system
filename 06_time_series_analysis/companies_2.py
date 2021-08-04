@@ -1,5 +1,4 @@
-companies = {'Search for a company' : '',
-'3M': 'MMM',
+companies = {'3M': 'MMM',
  'A. O. Smith': 'AOS',
  'Abbott Laboratories': 'ABT',
  'AbbVie': 'ABBV',
