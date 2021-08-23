@@ -1,2 +1,2 @@
-# Natural Language Generation from Structured Data
+# Data-to-text system to summarise time series data
 
