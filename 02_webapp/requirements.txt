@@ -1,0 +1,7 @@
+yfinance==0.1.62
+pandas==1.0.5
+numpy==1.20.3
+streamlit==0.83.0
+jenkspy==0.2.0
+fuzzylogic
+
